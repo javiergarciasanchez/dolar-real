@@ -166,7 +166,7 @@ def inflacion_indec() -> pd.DataFrame:
 
 # ---------------------------------------------------------------- CPI Estados Unidos
 FRED_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={}"
-SERIE_CPI = "CPIAUCSL"   # = BLS CUSR0000SA0, desestacionalizado (como el Excel). Alternativa: CPIAUCNS
+SERIE_CPI = "CPIAUCNS"   # = BLS CUUR0000SA0, sin desestacionalizar, como el IPC argentino
 
 
 def _fred(serie: str) -> pd.Series:

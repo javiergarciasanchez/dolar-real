@@ -26,6 +26,8 @@ Probado contra las fuentes reales en la PC de Javier (24-oct-2026, Claude Code):
 - `ci/actualizar.yml` ya está en `.github/workflows/`.
 - `test_calculo.py` usa una copia congelada de los insumos del Excel (`tests/fixtures/insumos_excel/`); antes leía `data/raw/` y se rompía con cada revisión de una fuente.
 - Repo público `javiergarciasanchez/dolar-real`, Pages en https://javiergarciasanchez.github.io/dolar-real/ (la página dice sólo IAE Business School).
+- CPI de EE.UU.: decidido usar `CPIAUCNS` (sin desestacionalizar, como el IPC argentino). También se cambió la consulta "USA CPI" del libro "Dólar Real Mensual.xlsx" a `CUUR0000SA0`.
+- Excel por automatización (COM): se cae si se edita mientras el libro termina de cargar, al cambiar `Queries(...).Formula` o al tocar el hipervínculo de la hoja "USA CPI". Lo que funcionó: editar la consulta y las celdas en el XML del paquete y usar Excel sólo para refrescar y guardar.
 
 ## Próximos pasos, en orden
 
@@ -35,8 +37,6 @@ Probado contra las fuentes reales en la PC de Javier (24-oct-2026, Claude Code):
 
 ## Decisiones pendientes de Javier
 
-- CPI de EE.UU. desestacionalizado (`CPIAUCSL`, como el Excel) vs. sin desestacionalizar (`CPIAUCNS`, más consistente con el IPC argentino).
-- Nombre del repo y si la página lleva su nombre o sólo IAE Business School.
 - Rotar la clave de FRED que quedó guardada dentro de las consultas del Excel compartido.
 
 ## Comandos

@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-10-24T16:21+00:00",
+  "actualizado": "2026-10-24T16:42+00:00",
   "mes_base": "2026-09",
   "fuentes": {
     "Tipo de cambio oficial (BCRA Com. A 3500)": {
@@ -25,7 +25,8 @@
       "ok": true,
       "ultimo_mes": "2026-09",
       "avisos": [
-        "meses faltantes: ['2025-10']"
+        "meses faltantes: ['2025-10']",
+        "saltos grandes: ['1917-04', '1920-04', '1921-02', '1933-07', '1946-07']"
       ]
     },
     "ITCRM (BCRA)": {
