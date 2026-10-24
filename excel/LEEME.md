@@ -18,7 +18,7 @@ Los archivos de `data/raw/` se leen desde `raw.githubusercontent.com/javiergarci
 
 - En "Dólar Real Form", la columna de meses es `=SORT(Dolar_Real[mes],,-1)` y crece sola: ya no hay que insertar filas. Los insumos (TC oficial y blue nominales, bandas, inflaciones, ITCRM, bilateral EE.UU., brecha TWDI) son `XLOOKUP` sobre `Dolar_Real`; el resto de las columnas no cambió. El cuadro de bandas de los meses próximos sigue usando `Bandas_Cambiarias`.
 - Los tres gráficos apuntan a nombres definidos de la hoja (`GrafCorto_*` desde jun-2019, `GrafEventos_*` desde ene-2000, `GrafCompleto_*` desde ene-1970, `GrafEtiq_*` para las etiquetas de eventos) que se estiran con los meses. Las series ocultas por el filtro de cada gráfico conservan su rango fijo.
-- Se borraron las consultas que descargaban cada fuente (27 en total, entre ellas las de FRED con clave) y las hojas que sólo guardaban sus resultados: "Dolar Mensual", "Dolar Blue", "Dolar Blue - Fuent Ambito", "Dolar Alberto - Fuente BCRA" y "TCRM". Quedan como registro histórico "Dolar 1970-01 - 2019-10" y "Parámetros".
+- Se borraron las consultas que descargaban cada fuente (27 en total, entre ellas las de FRED con clave) y las hojas que sólo guardaban sus resultados: "Dolar Mensual", "Dolar Blue", "Dolar Blue - Fuent Ambito", "Dolar Alberto - Fuente BCRA" y "TCRM". Después se borraron también las hojas que ya no usaba nada: "Proy Prom old", "Bal Com", "Dolar 1970-01 - 2019-10" y "Monedas". El tipo de cambio diario 1970–2019 y sus correcciones siguen en `data/raw/tc_oficial_diario_1970_2019.csv` y en la copia "- pre-github".
 
 ## Uso mensual
 
