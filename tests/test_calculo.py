@@ -1,8 +1,8 @@
 """Verifica que el cálculo en Python reproduce la hoja "Dólar Real Form" del Excel original
 usando los mismos insumos (los CSV semilla extraídos del Excel en oct-2026).
 
-Los insumos cambian con cada actualización, así que el test fija el mes base y usa sólo
-los datos hasta ese mes; si una fuente revisa datos viejos, puede fallar y hay que revisarlo.
+Los insumos de data/raw/ cambian con cada actualización y las fuentes revisan datos viejos,
+así que el test usa una copia congelada de los CSV semilla (fixtures/insumos_excel/).
 """
 from pathlib import Path
 
@@ -13,6 +13,7 @@ import pytest
 from dolar_real.calculo import Insumos, calcular
 
 FIX = Path(__file__).parent / "fixtures" / "excel_dolar_real_form.csv"
+INSUMOS_EXCEL = Path(__file__).parent / "fixtures" / "insumos_excel"
 BASE_EXCEL = pd.Timestamp("2026-09-01")
 
 COLUMNAS = {  # columna Python -> columna Excel
@@ -34,7 +35,7 @@ COLUMNAS = {  # columna Python -> columna Excel
 def ambos():
     xl = pd.read_csv(FIX, parse_dates=["Mes"]).set_index("Mes").sort_index()
     xl = xl.apply(pd.to_numeric, errors="coerce")
-    py = calcular(Insumos.desde_csv(), base=BASE_EXCEL)
+    py = calcular(Insumos.desde_csv(INSUMOS_EXCEL), base=BASE_EXCEL)
     return py, xl
 
 

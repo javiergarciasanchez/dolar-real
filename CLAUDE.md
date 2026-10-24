@@ -24,6 +24,8 @@ Probado contra las fuentes reales en la PC de Javier (24-oct-2026, Claude Code):
 - El respaldo ArgentinaDatos funciona pero difiere hasta 5,5% de Ámbito en promedios mensuales.
 - Avisos esperables en `estado.json`: saltos en ene-2002 y dic-2023 (devaluaciones), CPI oct-2025 faltante.
 - `ci/actualizar.yml` ya está en `.github/workflows/`.
+- `test_calculo.py` usa una copia congelada de los insumos del Excel (`tests/fixtures/insumos_excel/`); antes leía `data/raw/` y se rompía con cada revisión de una fuente.
+- Repo público `javiergarciasanchez/dolar-real`, Pages en https://javiergarciasanchez.github.io/dolar-real/ (la página dice sólo IAE Business School).
 
 ## Próximos pasos, en orden
 

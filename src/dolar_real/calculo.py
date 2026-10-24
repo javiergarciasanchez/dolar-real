@@ -21,8 +21,8 @@ RAW = ROOT / "data" / "raw"
 INICIO = pd.Timestamp("1970-01-01")
 
 
-def _leer(nombre: str) -> pd.DataFrame:
-    df = pd.read_csv(RAW / nombre, parse_dates=["mes"])
+def _leer(nombre: str, carpeta: Path = RAW) -> pd.DataFrame:
+    df = pd.read_csv(carpeta / nombre, parse_dates=["mes"])
     return df.set_index("mes").sort_index()
 
 
@@ -37,15 +37,15 @@ class Insumos:
     bandas: pd.DataFrame         # columnas banda_inferior, banda_superior
 
     @classmethod
-    def desde_csv(cls) -> "Insumos":
+    def desde_csv(cls, carpeta: Path = RAW) -> "Insumos":
         return cls(
-            tc_oficial=_leer("tc_oficial_mensual.csv")["tc_oficial"],
-            blue=_leer("blue_mensual.csv")["blue"],
-            inflacion_arg=_leer("inflacion_argentina_mensual.csv")["inflacion"],
-            cpi_usa=_leer("cpi_usa_mensual.csv")["cpi"],
-            itcrm=_leer("itcrm_bcra_normalizado.csv"),
-            twdi=_leer("twdi_fred_mensual.csv")["twdi"],
-            bandas=_leer("bandas_cambiarias_mensual.csv"),
+            tc_oficial=_leer("tc_oficial_mensual.csv", carpeta)["tc_oficial"],
+            blue=_leer("blue_mensual.csv", carpeta)["blue"],
+            inflacion_arg=_leer("inflacion_argentina_mensual.csv", carpeta)["inflacion"],
+            cpi_usa=_leer("cpi_usa_mensual.csv", carpeta)["cpi"],
+            itcrm=_leer("itcrm_bcra_normalizado.csv", carpeta),
+            twdi=_leer("twdi_fred_mensual.csv", carpeta)["twdi"],
+            bandas=_leer("bandas_cambiarias_mensual.csv", carpeta),
         )
 
 
