@@ -29,15 +29,12 @@ Probado contra las fuentes reales en la PC de Javier (24-oct-2026, Claude Code):
 - CPI de EE.UU.: decidido usar `CPIAUCNS` (sin desestacionalizar, como el IPC argentino). También se cambió la consulta "USA CPI" del libro "Dólar Real Mensual.xlsx" a `CUUR0000SA0`.
 - Excel por automatización (COM): se cae si se edita mientras el libro termina de cargar, al cambiar `Queries(...).Formula` o al tocar el hipervínculo de la hoja "USA CPI". Lo que funcionó: editar la consulta y las celdas en el XML del paquete y usar Excel sólo para refrescar y guardar.
 
-## Próximos pasos, en orden
+- El workflow corre bien desde GitHub (BCRA e INDEC no bloquean); el plan B con el Programador de tareas de Windows no hizo falta.
+- "Dólar Real Mensual.xlsx" (OneDrive) conectado al CSV publicado; detalle en `excel/LEEME.md`. Copia previa: "Dólar Real Mensual - pre-github.xlsx". Las consultas de FRED del libro ya no usan clave (leen `fredgraph.csv`), así que la clave vieja dejó de estar en el archivo; las copias anteriores del libro (Teams, alumnos) todavía la tienen.
 
-1. Instalar GitHub CLI (`winget install GitHub.cli`, luego `gh auth login`). Crear el repo (`gh repo create`), subir, activar Pages desde `main` / carpeta `docs`, y lanzar el workflow a mano (`gh workflow run actualizar.yml`).
-2. Si BCRA o INDEC bloquean los servidores de GitHub (corren en EE.UU.), plan B: correr `actualizar` en la PC con el Programador de tareas de Windows y hacer `git push` desde ahí; el workflow queda sólo para recalcular.
-3. Conectar el Excel de clase (`excel/LEEME.md`) y guardar una copia actualizada en OneDrive.
+## Pendiente
 
-## Decisiones pendientes de Javier
-
-- Rotar la clave de FRED que quedó guardada dentro de las consultas del Excel compartido.
+- Opcional: dar de baja la clave vieja de FRED en la cuenta de Javier, porque sigue en copias anteriores del libro.
 
 ## Comandos
 
