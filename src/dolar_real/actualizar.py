@@ -36,7 +36,7 @@ def _leer(nombre):
 def _guardar(df, nombre):
     df = df.sort_values(df.columns[0]).reset_index(drop=True).copy()
     df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0]).dt.strftime("%Y-%m-%d")
-    df.to_csv(RAW / nombre, index=False, float_format="%.10g")
+    df.to_csv(RAW / nombre, index=False, float_format="%.10g", lineterminator="\n")
 
 
 def _validar(viejo: pd.DataFrame, nuevo: pd.DataFrame, col: str, *, rango, salto_max,
@@ -140,7 +140,7 @@ def main(argv=None):
     info = publicar()
     salida = {"actualizado": datetime.now(timezone.utc).isoformat(timespec="minutes"),
               "mes_base": info["mes_base"], "fuentes": estado}
-    ESTADO.write_text(json.dumps(salida, indent=2, ensure_ascii=False), encoding="utf-8")
+    ESTADO.write_text(json.dumps(salida, indent=2, ensure_ascii=False), encoding="utf-8", newline="\n")
     fallas = [k for k, v in estado.items() if not v["ok"]]
     print(f"\nMes base: {info['mes_base']}")
     if fallas:

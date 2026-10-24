@@ -64,7 +64,7 @@ def publicar() -> dict:
 
     out = df.copy()
     out.index = out.index.strftime("%Y-%m-%d")
-    out.to_csv(DOCS / "dolar_real.csv", float_format="%.10g")
+    out.to_csv(DOCS / "dolar_real.csv", float_format="%.10g", lineterminator="\n")
     return res
 
 
