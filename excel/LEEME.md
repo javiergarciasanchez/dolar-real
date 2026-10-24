@@ -4,10 +4,21 @@ El libro "Dólar Real Mensual.xlsx" (OneDrive, Finanzas Internacionales) lee la 
 
 ## Cómo está conectado (oct-2026)
 
-- Consulta `Dolar_Real` (texto en `consulta_powerquery.m`), cargada en la tabla `Dolar_Real` de la hoja **Datos**.
-- En "Dólar Real Form", la columna de meses es `=SORT(Dolar_Real[mes],,-1)` y crece sola: ya no hay que insertar filas. Los insumos (TC oficial y blue nominales, bandas, inflaciones, ITCRM, bilateral EE.UU., brecha TWDI) son `XLOOKUP` sobre `Dolar_Real`; el resto de las columnas no cambió.
+El libro tiene cinco consultas y todas leen de GitHub; "Actualizar todo" no consulta a BCRA, INDEC, BLS ni FRED.
+
+| Consulta | Lee | Tabla (hoja) | Texto |
+|---|---|---|---|
+| `Dolar_Real` | `docs/dolar_real.csv` (GitHub Pages) | `Dolar_Real` (Datos) | `consulta_powerquery.m` |
+| `Inflación` | `data/raw/inflacion_argentina_mensual.csv` | `Inflación` (Inflac Arg) | `consulta_inflacion.m` |
+| `USA CPI` | `data/raw/cpi_usa_mensual.csv` | `USA_CPI` (USA CPI) | `consulta_usa_cpi.m` |
+| `Real TWDI` | `data/raw/twdi_fred_mensual.csv` | `Real_TWDI` (TWDI) | `consulta_real_twdi.m` |
+| `Bandas Cambiarias` | `data/raw/bandas_cambiarias_mensual.csv` | `Bandas_Cambiarias` (Bandas Cambiarias) | `consulta_bandas.m` |
+
+Los archivos de `data/raw/` se leen desde `raw.githubusercontent.com/javiergarciasanchez/dolar-real/main/`. Cada consulta devuelve las mismas columnas que la original; las columnas que las tablas agregan con fórmulas (IPC y Año en `Inflación`; Temp, CPI corregido, InflacUSA y Año en `USA_CPI`) no vienen de la consulta.
+
+- En "Dólar Real Form", la columna de meses es `=SORT(Dolar_Real[mes],,-1)` y crece sola: ya no hay que insertar filas. Los insumos (TC oficial y blue nominales, bandas, inflaciones, ITCRM, bilateral EE.UU., brecha TWDI) son `XLOOKUP` sobre `Dolar_Real`; el resto de las columnas no cambió. El cuadro de bandas de los meses próximos sigue usando `Bandas_Cambiarias`.
 - Los tres gráficos apuntan a nombres definidos de la hoja (`GrafCorto_*` desde jun-2019, `GrafEventos_*` desde ene-2000, `GrafCompleto_*` desde ene-1970, `GrafEtiq_*` para las etiquetas de eventos) que se estiran con los meses. Las series ocultas por el filtro de cada gráfico conservan su rango fijo.
-- Siguen en el libro las consultas propias de las hojas auxiliares ("Inflac Prom", "Infl Prom USA", "Proy Prom Anual", "TWDI", proyección de bandas). Las dos de FRED (TWDI) leen `fredgraph.csv`, sin clave.
+- Se borraron las consultas que descargaban cada fuente (27 en total, entre ellas las de FRED con clave) y las hojas que sólo guardaban sus resultados: "Dolar Mensual", "Dolar Blue", "Dolar Blue - Fuent Ambito", "Dolar Alberto - Fuente BCRA" y "TCRM". Quedan como registro histórico "Dolar 1970-01 - 2019-10" y "Parámetros".
 
 ## Uso mensual
 

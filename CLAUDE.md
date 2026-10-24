@@ -8,6 +8,7 @@ Proyecto de Javier (profesor de Finanzas, director del EMBA del IAE). Migra el l
 - Los insumos se guardan como CSV en `data/raw/` y cada uno está documentado en `FUENTES.md`. Si se agrega o cambia una fuente, actualizar `FUENTES.md` en el mismo cambio.
 - `tests/test_calculo.py` debe seguir pasando: verifica que el cálculo reproduce el Excel original (mes base sep-2026). No cambiar la metodología sin acordarlo con Javier.
 - No poner claves de API en el código. FRED se lee por `fredgraph.csv`, que no requiere clave.
+- El Excel de clase lee `docs/dolar_real.csv` y cuatro CSV de `data/raw/` (inflación, CPI, TWDI, bandas) directamente de GitHub (`excel/LEEME.md`). No renombrarlos ni cambiarles las columnas sin actualizar las consultas `excel/*.m` y el libro.
 
 ## Estado (oct-2026, armado en Cowork)
 
@@ -30,7 +31,8 @@ Probado contra las fuentes reales en la PC de Javier (24-oct-2026, Claude Code):
 - Excel por automatización (COM): se cae si se edita mientras el libro termina de cargar, al cambiar `Queries(...).Formula` o al tocar el hipervínculo de la hoja "USA CPI". Lo que funcionó: editar la consulta y las celdas en el XML del paquete y usar Excel sólo para refrescar y guardar.
 
 - El workflow corre bien desde GitHub (BCRA e INDEC no bloquean); el plan B con el Programador de tareas de Windows no hizo falta.
-- "Dólar Real Mensual.xlsx" (OneDrive) conectado al CSV publicado; detalle en `excel/LEEME.md`. Copia previa: "Dólar Real Mensual - pre-github.xlsx". Las consultas de FRED del libro ya no usan clave (leen `fredgraph.csv`), así que la clave vieja dejó de estar en el archivo; las copias anteriores del libro (Teams, alumnos) todavía la tienen.
+- "Dólar Real Mensual.xlsx" (OneDrive) conectado a GitHub: cinco consultas, todas a `docs/dolar_real.csv` o `data/raw/`; detalle en `excel/LEEME.md`. Copia previa: "Dólar Real Mensual - pre-github.xlsx". La clave vieja de FRED ya no está en el libro; las copias anteriores (Teams, alumnos, pre-github) todavía la tienen.
+- Para modificar el libro por automatización: el texto de las consultas se cambia en el XML del paquete (DataMashup) y Excel sólo se usa para refrescar, borrar consultas/hojas/conexiones y guardar, siempre esperando ~30 s después de abrir. Al borrar consultas por COM quedan conexiones huérfanas que hay que borrar aparte. Antes de reemplazar el archivo en OneDrive, comparar su hash con la copia de trabajo (Javier puede haberlo abierto y guardado).
 
 ## Pendiente
 
