@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--PAGE-->
+<title>Dólar Real Argentina</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Tipo de cambio real de Argentina desde 1970, en pesos del último mes con datos. Actualización mensual.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: boletín estadístico — titular con la cifra del mes, fila de controles, gráfico ancho, tabla de desvíos y nota metodológica */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --ink: #12161d;
+  --ink-2: #4a5160;
+  --ink-3: #737a88;
+  --rule: #dfe2e8;
+  --grid: #eceef2;
+  --accent: #1c5cab;
+  --chip-on: #12161d;
+  --chip-on-ink: #ffffff;
+  --neg: #b23a3a;
+  --pos: #19784f;
+  --band: rgba(115,122,136,.18);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171c; --surface: #1b1f26; --ink: #eef0f3; --ink-2: #b9bfca; --ink-3: #8a919e;
+    --rule: #2c323c; --grid: #252a32; --accent: #86b6ef; --chip-on: #eef0f3; --chip-on-ink: #14171c;
+    --neg: #e67a7a; --pos: #4fc28e; --band: rgba(185,191,202,.12);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171c; --surface: #1b1f26; --ink: #eef0f3; --ink-2: #b9bfca; --ink-3: #8a919e;
+  --rule: #2c323c; --grid: #252a32; --accent: #86b6ef; --chip-on: #eef0f3; --chip-on-ink: #14171c;
+  --neg: #e67a7a; --pos: #4fc28e; --band: rgba(185,191,202,.12);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 48px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 28px; }
+.num { font-variant-numeric: tabular-nums; }
+header { display: grid; gap: 10px; }
+.eyebrow { font-family: var(--display); font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+h1 { font-family: var(--display); font-stretch: 80%; font-weight: 800; font-size: clamp(30px, 5vw, 46px); line-height: 1.02; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { margin: 0; max-width: 68ch; color: var(--ink-2); font-size: 16px; }
+.lede strong { color: var(--ink); }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.stat { padding: 14px 16px 14px 0; display: grid; gap: 2px; align-content: start; }
+.stat + .stat { padding-left: 16px; border-left: 1px solid var(--rule); }
+.stat .k { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; font-family: var(--display); font-stretch: 85%; font-weight: 600; }
+.stat .v { font-family: var(--display); font-stretch: 80%; font-weight: 700; font-size: 30px; line-height: 1.1; }
+.stat .d { font-size: 13px; color: var(--ink-2); }
+.neg { color: var(--neg); } .pos { color: var(--pos); }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+.group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.group .lbl { font-size: 12px; color: var(--ink-3); margin-right: 2px; }
+.chip { font: 600 13px/1 var(--body); border: 1px solid var(--rule); background: transparent; color: var(--ink-2); padding: 7px 10px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.chip:hover { border-color: var(--ink-3); color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); border-color: var(--chip-on); }
+.chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sw { width: 14px; height: 0; border-top: 3px solid var(--c); border-radius: 2px; }
+.sw.dash { border-top-style: dashed; } .sw.dot { border-top-style: dotted; }
+.sw.band { height: 10px; border: 0; background: var(--band); outline: 1px solid var(--ink-3); outline-offset: -1px; }
+#chart { width: 100%; height: clamp(360px, 58vh, 560px); }
+.note { font-size: 13px; color: var(--ink-3); margin: 0; }
+h2 { font-family: var(--display); font-stretch: 85%; font-weight: 700; font-size: 22px; margin: 0; text-wrap: balance; }
+.two { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; white-space: normal; }
+thead th { font-weight: 600; color: var(--ink-3); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--ink-3); }
+.metodo { display: grid; gap: 10px; color: var(--ink-2); font-size: 14px; max-width: 70ch; }
+.metodo p { margin: 0; }
+.formula { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 10px 12px; overflow-x: auto; color: var(--ink); }
+a { color: var(--accent); }
+footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+@media (max-width: 760px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(3) { padding-left: 0; border-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .two { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow" id="eyebrow">Tipo de cambio real · Argentina</div>
+    <h1 id="titulo">Dólar real desde 1970</h1>
+    <p class="lede" id="lede">Cargando datos…</p>
+  </header>
+
+  <section class="stats" id="stats" aria-label="Valores del mes base"></section>
+
+  <section class="panel" aria-label="Gráfico">
+    <div class="controls">
+      <div class="group" role="group" aria-label="Series">
+        <span class="lbl">Series</span>
+        <button class="chip" id="s-oficial" data-k="oficial" aria-pressed="true"><span class="sw" style="--c:var(--s1)"></span>Oficial</button>
+        <button class="chip" id="s-blue" data-k="blue" aria-pressed="true"><span class="sw" style="--c:var(--s2)"></span>Blue</button>
+        <button class="chip" id="s-multi" data-k="multilateral" aria-pressed="false"><span class="sw" style="--c:var(--s3)"></span>Multilateral (ITCRM)</button>
+        <button class="chip" id="s-usa" data-k="bilateral_usa" aria-pressed="false"><span class="sw" style="--c:var(--s4)"></span>Bilateral EE.UU.</button>
+      </div>
+      <div class="group" role="group" aria-label="Referencias">
+        <span class="lbl">Referencias</span>
+        <button class="chip" id="r-prom" data-k="prom" aria-pressed="true"><span class="sw dash" style="--c:var(--ink-2)"></span>Promedio histórico</button>
+        <button class="chip" id="r-twdi" data-k="twdi" aria-pressed="false"><span class="sw dot" style="--c:var(--ink-2)"></span>Promedio ajustado por dólar global</button>
+        <button class="chip" id="r-bandas" data-k="bandas" aria-pressed="true"><span class="sw band"></span>Bandas</button>
+        <button class="chip" id="r-eventos" data-k="eventos" aria-pressed="true">Eventos</button>
+      </div>
+      <div class="group" role="group" aria-label="Período">
+        <span class="lbl">Desde</span>
+        <button class="chip" id="p-1970" data-p="1970-01" aria-pressed="false">1970</button>
+        <button class="chip" id="p-2000" data-p="2000-01" aria-pressed="true">2000</button>
+        <button class="chip" id="p-2015" data-p="2015-01" aria-pressed="false">2015</button>
+        <button class="chip" id="p-3a" data-p="-36" aria-pressed="false">3 años</button>
+      </div>
+    </div>
+    <div id="chart" role="img" aria-label="Gráfico de líneas del tipo de cambio real"></div>
+    <p class="note" id="nota-grafico"></p>
+  </section>
+
+  <section class="two">
+    <div class="panel" style="gap:10px">
+      <h2>¿Caro o barato contra la historia?</h2>
+      <p class="note">Desvío del valor actual respecto de cada promedio histórico, en pesos del mes base. Negativo: el dólar está más barato que su promedio.</p>
+      <div class="tbl"><table id="desvios"></table></div>
+    </div>
+    <div class="metodo">
+      <h2>Cómo se calcula</h2>
+      <p>Cada mes histórico se lleva a pesos del mes base ajustando por la inflación de Argentina y la de Estados Unidos. En el mes base el valor real coincide con el nominal.</p>
+      <div class="formula">TCR<sub>t</sub> = TC<sub>t</sub> × ∏<sub>k=t+1…base</sub> (1+π<sup>ARG</sup><sub>k</sub>) / (1+π<sup>USA</sup><sub>k</sub>)</div>
+      <p>El multilateral y el bilateral con EE.UU. son los índices del BCRA (ITCRM) reescalados para que el mes base valga el tipo de cambio oficial. El ajuste por dólar global corrige el promedio histórico según la fortaleza real del dólar en el mundo (índice amplio de la Reserva Federal) respecto de su media.</p>
+      <p>Fuentes: BCRA (Com. A 3500, ITCRM, bandas), INDEC y datos.gob.ar (IPC empalmado según la metodología del ITCRM), BLS/FRED (CPI e índice del dólar), Ámbito (blue).</p>
+    </div>
+  </section>
+
+  <footer>
+    <span id="actualizado"></span>
+    <span><a href="dolar_real.csv">Descargar serie (CSV)</a> · IAE Business School</span>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script>
+(function () {
+  const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  const fmtMes = (m) => { const [a, b] = m.split("-"); return MESES[+b - 1] + "-" + a.slice(2); };
+  const fmtMesLargo = (m) => { const [a, b] = m.split("-"); return MESES[+b - 1] + " " + a; };
+  const ars = (v, d = 0) => v == null ? "–" : "$ " + v.toLocaleString("es-AR", { maximumFractionDigits: d, minimumFractionDigits: d });
+  const pct = (v) => (v > 0 ? "+" : "") + (v * 100).toLocaleString("es-AR", { maximumFractionDigits: 0 }) + "%";
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  let D, chart, desde = "2000-01";
+  const on = { oficial: true, blue: true, multilateral: false, bilateral_usa: false, prom: true, twdi: false, bandas: true, eventos: innerWidth > 640 };
+
+  function cabecera() {
+    const r = D.resumen, base = r.mes_base;
+    const of = r.actuales.Oficial, po = r.promedios["Promedio oficial"];
+    const dv = of / po - 1;
+    document.getElementById("eyebrow").textContent = "Tipo de cambio real · pesos de " + fmtMesLargo(base);
+    document.getElementById("titulo").textContent = "El dólar oficial está " + Math.abs(Math.round(dv * 100)) + "% " + (dv < 0 ? "por debajo" : "por encima") + " de su promedio desde 1970";
+    document.getElementById("lede").innerHTML = "En " + fmtMesLargo(base) + " el oficial promedió <strong>" + ars(of) + "</strong>. Llevado a pesos de hoy, su promedio histórico es <strong>" + ars(po) + "</strong>. Los meses anteriores se ajustan por la inflación de Argentina y la de Estados Unidos.";
+    const banda = r.actuales["Banda superior"];
+    const tiles = [
+      ["Oficial mayorista", ars(of), "promedio de " + fmtMesLargo(base)],
+      ["Blue", ars(r.actuales.Blue), "brecha " + pct(r.brecha_blue_oficial)],
+      ["Promedio histórico", ars(po), "oficial real 1970–" + base.slice(0, 4)],
+      ["Banda superior", banda ? ars(banda) : "–", banda ? "oficial a " + pct(of / banda - 1) + " del techo" : "sin bandas vigentes"],
+    ];
+    document.getElementById("stats").innerHTML = tiles.map(([k, v, d]) =>
+      `<div class="stat"><span class="k">${k}</span><span class="v num">${v}</span><span class="d">${d}</span></div>`).join("");
+    document.getElementById("actualizado").textContent = "Datos hasta " + fmtMesLargo(base) + " · actualizado el " + new Date(D.generado).toLocaleDateString("es-AR");
+    document.getElementById("nota-grafico").textContent = "Pesos de " + fmtMesLargo(base) + " por dólar. El blue se muestra sólo en los períodos con cepo (2011–2015 y desde 2019). Las bandas son el promedio mensual del régimen vigente.";
+
+    const filas = Object.keys(r.promedios);
+    const cols = Object.keys(r.desvios);
+    document.getElementById("desvios").innerHTML =
+      "<thead><tr><th>Promedio</th><th>Valor</th>" + cols.map(c => `<th>${c}</th>`).join("") + "</tr></thead><tbody>" +
+      filas.map(f => `<tr><td>${f}</td><td class="num">${ars(r.promedios[f])}</td>` +
+        cols.map(c => { const v = r.desvios[c][f]; return `<td class="num ${v < 0 ? "neg" : "pos"}">${pct(v)}</td>`; }).join("") + "</tr>").join("") + "</tbody>";
+  }
+
+  function rango() {
+    const m = D.meses;
+    let i0 = desde.startsWith("-") ? Math.max(0, m.length + +desde) : Math.max(0, m.indexOf(desde));
+    return [i0, m.length - 1];
+  }
+
+  function opciones() {
+    const S = D.series, M = D.meses, [i0, i1] = rango();
+    const sl = (a) => a.slice(i0, i1 + 1);
+    const x = sl(M);
+    const ink2 = css("--ink-2"), ink3 = css("--ink-3"), grid = css("--grid"), rule = css("--rule"), surface = css("--surface"), ink = css("--ink");
+    const col = { oficial: css("--s1"), blue: css("--s2"), multilateral: css("--s3"), bilateral_usa: css("--s4") };
+    const nombres = { oficial: "Oficial", blue: "Blue", multilateral: "Multilateral (ITCRM)", bilateral_usa: "Bilateral EE.UU." };
+    const series = [];
+    const linea = (k, data, extra = {}) => ({
+      name: nombres[k], type: "line", data, showSymbol: false, symbolSize: 8, connectNulls: false,
+      lineStyle: { width: 2, color: col[k] }, itemStyle: { color: col[k], borderColor: surface, borderWidth: 2 },
+      emphasis: { focus: "none", lineStyle: { width: 2 } }, z: 3, ...extra,
+    });
+
+    if (on.bandas) {
+      const inf = sl(S.banda_inferior), sup = sl(S.banda_superior);
+      series.push({ name: "_bi", type: "line", data: inf, stack: "banda", showSymbol: false, lineStyle: { width: 1, color: ink3, opacity: .6 }, silent: true, z: 1 });
+      series.push({ name: "Bandas", type: "line", data: sup.map((v, i) => v == null || inf[i] == null ? null : v - inf[i]), stack: "banda",
+        showSymbol: false, lineStyle: { width: 1, color: ink3, opacity: .6 }, areaStyle: { color: css("--band"), opacity: 1 }, silent: true, z: 1 });
+    }
+    for (const k of ["oficial", "blue", "multilateral", "bilateral_usa"]) {
+      if (!on[k]) continue;
+      const data = sl(S[k]);
+      const extra = {};
+      const lbl = { color: ink2, fontSize: 11, fontFamily: "Public Sans, sans-serif", textBorderColor: surface, textBorderWidth: 3 };
+      const pts = [];
+      if (on.eventos && (k === "oficial" || k === "blue")) {
+        for (const e of D.eventos) {
+          const i = M.indexOf(e.mes);
+          if (e.serie !== k || i < i0) continue;
+          const v = S[k][i], vec = [S[k][i - 6], S[k][i + 6]].filter(z => z != null);
+          const abajo = vec.length && v < vec.reduce((a, b) => a + b, 0) / vec.length;
+          pts.push({ coord: [e.mes, v], value: e.evento, label: { ...lbl, show: true, position: abajo ? "bottom" : "top", distance: 6, formatter: (p) => p.value } });
+        }
+      }
+      if (k === "oficial" || k === "blue") {
+        const v = data[data.length - 1];
+        pts.push({ coord: [x[x.length - 1], v], value: v, symbolSize: 0,
+          label: { show: true, position: "right", distance: 8, offset: [0, k === "blue" ? -8 : 8], formatter: () => ars(v), color: ink, fontWeight: 600, fontSize: 12 } });
+      }
+      if (pts.length) extra.markPoint = { symbol: "circle", symbolSize: 8, itemStyle: { color: col[k], borderColor: surface, borderWidth: 2 }, data: pts };
+      series.push(linea(k, data, extra));
+      const promKey = { oficial: "prom_oficial", blue: "prom_blue", multilateral: "prom_multilateral" }[k];
+      if (on.prom && promKey) series.push(linea(k, sl(S[promKey]), { name: "Promedio " + nombres[k].toLowerCase(), lineStyle: { width: 1.5, type: [6, 4], color: col[k] }, z: 2, silent: false }));
+      const twKey = { oficial: "prom_oficial_aj_twdi", blue: "prom_blue_aj_twdi" }[k];
+      if (on.twdi && twKey) series.push(linea(k, sl(S[twKey]), { name: "Prom. ajustado " + nombres[k].toLowerCase(), lineStyle: { width: 1.5, type: [2, 3], color: col[k] }, z: 2 }));
+    }
+
+    return {
+      animation: !matchMedia("(prefers-reduced-motion: reduce)").matches,
+      grid: { left: 8, right: 74, top: 24, bottom: 28, containLabel: true },
+      xAxis: { type: "category", data: x, boundaryGap: false,
+        axisLine: { lineStyle: { color: rule } }, axisTick: { show: false },
+        axisLabel: { color: ink3, formatter: (v) => v.endsWith("-01") ? v.slice(0, 4) : "", interval: 0, hideOverlap: true, fontSize: 12 } },
+      yAxis: { type: "value", scale: false, splitLine: { lineStyle: { color: grid } }, axisLabel: { color: ink3, fontSize: 12, formatter: (v) => "$ " + v.toLocaleString("es-AR") } },
+      tooltip: {
+        trigger: "axis", backgroundColor: surface, borderColor: rule, textStyle: { color: ink, fontSize: 13 },
+        axisPointer: { type: "line", lineStyle: { color: ink3, width: 1 } },
+        formatter: (ps) => {
+          const m = ps[0].axisValue, i = M.indexOf(m);
+          let h = `<div style="font-weight:600;margin-bottom:4px">${fmtMesLargo(m)}</div>`;
+          for (const p of ps) {
+            if (p.seriesName.startsWith("_") || p.seriesName === "Bandas" || p.value == null) continue;
+            let nom = "";
+            if (p.seriesName === "Oficial") nom = ` <span style="color:${ink3}">(nominal ${ars(S.oficial_nominal[i], 2)})</span>`;
+            if (p.seriesName === "Blue") nom = ` <span style="color:${ink3}">(nominal ${ars(S.blue_nominal[i], 2)})</span>`;
+            h += `<div>${p.marker}${p.seriesName}: <b>${ars(p.value)}</b>${nom}</div>`;
+          }
+          if (on.bandas && S.banda_superior[i] != null) h += `<div style="color:${ink3}">Bandas: ${ars(S.banda_inferior[i])} – ${ars(S.banda_superior[i])}</div>`;
+          return h;
+        },
+      },
+      series,
+    };
+  }
+
+  function dibujar() { chart.setOption(opciones(), { notMerge: true }); }
+
+  function init(data) {
+    D = data;
+    cabecera();
+    chart = echarts.init(document.getElementById("chart"), null, { renderer: "svg" });
+    dibujar();
+    addEventListener("resize", () => chart.resize());
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", dibujar);
+    new MutationObserver(dibujar).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    document.getElementById("r-eventos").setAttribute("aria-pressed", on.eventos);
+    document.querySelectorAll(".chip[data-k]").forEach(b => b.addEventListener("click", () => {
+      const k = b.dataset.k; on[k] = !on[k]; b.setAttribute("aria-pressed", on[k]); dibujar();
+    }));
+    document.querySelectorAll(".chip[data-p]").forEach(b => b.addEventListener("click", () => {
+      desde = b.dataset.p;
+      document.querySelectorAll(".chip[data-p]").forEach(o => o.setAttribute("aria-pressed", o === b));
+      dibujar();
+    }));
+  }
+
+  fetch("data.json").then(r => r.json()).then(init).catch(e => {
+    document.getElementById("lede").textContent = "No se pudieron cargar los datos (" + e.message + ").";
+  });
+})();
+</script>
+</body>
+</html>

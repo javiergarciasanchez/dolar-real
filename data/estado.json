@@ -1,0 +1,49 @@
+{
+  "actualizado": "2026-10-24T14:40+00:00",
+  "mes_base": "2026-09",
+  "fuentes": {
+    "Tipo de cambio oficial (BCRA Com. A 3500)": {
+      "ok": true,
+      "ultimo_mes": "2026-10",
+      "avisos": [
+        "saltos grandes: ['2023-12']"
+      ]
+    },
+    "Dólar blue (Ámbito)": {
+      "ok": true,
+      "ultimo_mes": "2026-10",
+      "avisos": []
+    },
+    "Inflación Argentina (INDEC)": {
+      "ok": true,
+      "ultimo_mes": "2026-09",
+      "avisos": [
+        "saltos grandes: ['2023-12']"
+      ]
+    },
+    "CPI Estados Unidos (FRED)": {
+      "ok": true,
+      "ultimo_mes": "2026-09",
+      "avisos": [
+        "meses faltantes: ['2025-10']"
+      ]
+    },
+    "ITCRM (BCRA)": {
+      "ok": true,
+      "ultimo_mes": "2026-09",
+      "avisos": [
+        "saltos grandes: ['2002-01', '2023-12']"
+      ]
+    },
+    "Índice real del dólar (FRED)": {
+      "ok": true,
+      "ultimo_mes": "2026-09",
+      "avisos": []
+    },
+    "Bandas cambiarias (BCRA)": {
+      "ok": true,
+      "ultimo_mes": "2026-11",
+      "avisos": []
+    }
+  }
+}

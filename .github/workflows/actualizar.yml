@@ -1,0 +1,52 @@
+name: Actualizar dólar real
+
+on:
+  schedule:
+    # Días 16 y 20 de cada mes, 11:43 hora de Buenos Aires (14:43 UTC).
+    # INDEC publica el IPC alrededor del día 12-15; el día 20 es un reintento.
+    - cron: "43 14 16,20 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt && pip install -e .
+
+      - name: Tests
+        run: pytest -q
+
+      - name: Descargar fuentes y recalcular
+        id: actualizar
+        run: python -m dolar_real.actualizar || echo "fallo=1" >> "$GITHUB_OUTPUT"
+
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data docs
+          if git diff --cached --quiet; then
+            echo "Sin cambios"
+          else
+            MES=$(python -c "import json;print(json.load(open('data/estado.json'))['mes_base'])")
+            git commit -m "Datos actualizados: mes base $MES"
+            git push
+          fi
+
+      - name: Avisar si alguna fuente falló
+        if: steps.actualizar.outputs.fallo == '1'
+        run: |
+          cat data/estado.json
+          echo "::error::Una o más fuentes fallaron. Ver data/estado.json"
+          exit 1
