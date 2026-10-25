@@ -102,7 +102,15 @@ th:first-child, td:first-child { text-align: left; white-space: normal; }
 thead th { font-weight: 600; color: var(--ink-3); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--ink-3); }
 .metodo { display: grid; gap: 10px; color: var(--ink-2); font-size: 14px; max-width: 70ch; }
 .metodo p { margin: 0; }
-.formula { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 10px 12px; overflow-x: auto; color: var(--ink); }
+.formula { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: grid; gap: 12px; color: var(--ink); min-width: 0; }
+.formula .eq { overflow-x: auto; overflow-y: hidden; }
+.formula math { font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", math; font-size: 19px; margin: 0; }
+.formula .eq + .eq { border-top: 1px dashed var(--rule); padding-top: 10px; }
+.formula .cap { font-size: 12px; color: var(--ink-3); margin-bottom: 2px; }
+.simbolos { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; margin: 0; font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 10px; }
+.simbolos dt { color: var(--ink); white-space: nowrap; }
+.simbolos dt math { font-size: 15px; }
+.simbolos dd { margin: 0; }
 a { color: var(--accent); }
 footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
 @media (max-width: 760px) {
@@ -164,7 +172,36 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
     <div class="metodo">
       <h2>Cómo se calcula</h2>
       <p>Cada mes histórico se lleva a pesos del mes base ajustando por la inflación de Argentina y la de Estados Unidos. En el mes base el valor real coincide con el nominal.</p>
-      <div class="formula">TCR<sub>t</sub> = TC<sub>t</sub> × ∏<sub>k=t+1…base</sub> (1+π<sup>ARG</sup><sub>k</sub>) / (1+π<sup>USA</sup><sub>k</sub>)</div>
+      <div class="formula" role="group" aria-label="Fórmula del tipo de cambio real">
+        <div class="eq">
+          <div class="cap">Con las inflaciones mensuales</div>
+          <math display="block">
+            <msub><mi>TCR</mi><mi>t</mi></msub><mo>=</mo>
+            <msub><mi>TC</mi><mi>t</mi></msub><mo>×</mo>
+            <munderover><mo>∏</mo><mrow><mi>k</mi><mo>=</mo><mi>t</mi><mo>+</mo><mn>1</mn></mrow><mi>T</mi></munderover>
+            <mfrac>
+              <mrow><mn>1</mn><mo>+</mo><msubsup><mi>π</mi><mi>k</mi><mtext>ARG</mtext></msubsup></mrow>
+              <mrow><mn>1</mn><mo>+</mo><msubsup><mi>π</mi><mi>k</mi><mtext>USA</mtext></msubsup></mrow>
+            </mfrac>
+          </math>
+        </div>
+        <div class="eq">
+          <div class="cap">Equivalente, con los índices de precios</div>
+          <math display="block">
+            <msub><mi>TCR</mi><mi>t</mi></msub><mo>=</mo>
+            <msub><mi>TC</mi><mi>t</mi></msub><mo>×</mo>
+            <mfrac><msubsup><mi>IPC</mi><mi>T</mi><mtext>ARG</mtext></msubsup><msubsup><mi>IPC</mi><mi>t</mi><mtext>ARG</mtext></msubsup></mfrac>
+            <mo>×</mo>
+            <mfrac><msubsup><mi>CPI</mi><mi>t</mi><mtext>USA</mtext></msubsup><msubsup><mi>CPI</mi><mi>T</mi><mtext>USA</mtext></msubsup></mfrac>
+          </math>
+        </div>
+        <dl class="simbolos">
+          <dt><math><msub><mi>TCR</mi><mi>t</mi></msub></math></dt><dd>Tipo de cambio real del mes <i>t</i>, en pesos del mes base</dd>
+          <dt><math><msub><mi>TC</mi><mi>t</mi></msub></math></dt><dd>Tipo de cambio nominal, promedio del mes <i>t</i> (oficial, blue o bandas)</dd>
+          <dt><math><mi>T</mi></math></dt><dd>Mes base, el último con datos de inflación: <span id="mes-base-formula">el último mes publicado</span></dd>
+          <dt><math><msubsup><mi>π</mi><mi>k</mi><mtext>ARG</mtext></msubsup><mo>,</mo><msubsup><mi>π</mi><mi>k</mi><mtext>USA</mtext></msubsup></math></dt><dd>Inflación mensual de Argentina (IPC) y de Estados Unidos (CPI) en el mes <i>k</i></dd>
+        </dl>
+      </div>
       <p>El multilateral y el bilateral con EE.UU. son los índices del BCRA (ITCRM) reescalados para que el mes base valga el tipo de cambio oficial. El ajuste por dólar global corrige el promedio histórico según la fortaleza real del dólar en el mundo (índice amplio de la Reserva Federal) respecto de su media.</p>
       <p>Fuentes: BCRA (Com. A 3500, ITCRM, bandas), INDEC y datos.gob.ar (IPC empalmado según la metodología del ITCRM), BLS/FRED (CPI e índice del dólar), Ámbito (blue).</p>
     </div>
@@ -205,7 +242,8 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
     ];
     document.getElementById("stats").innerHTML = tiles.map(([k, v, d]) =>
       `<div class="stat"><span class="k">${k}</span><span class="v num">${v}</span><span class="d">${d}</span></div>`).join("");
-    document.getElementById("actualizado").textContent = "Datos hasta " + fmtMesLargo(base) + " · actualizado el " + new Date(D.generado).toLocaleDateString("es-AR");
+    document.getElementById("mes-base-formula").textContent = fmtMesLargo(base);
+    document.getElementById("actualizado").textContent ="Datos hasta " + fmtMesLargo(base) + " · actualizado el " + new Date(D.generado).toLocaleDateString("es-AR");
     document.getElementById("nota-grafico").textContent = "Pesos de " + fmtMesLargo(base) + " por dólar. El blue se muestra sólo en los períodos con cepo (2011–2015 y desde 2019). Las bandas son el promedio mensual del régimen vigente.";
 
     const filas = Object.keys(r.promedios);
