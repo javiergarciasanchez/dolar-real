@@ -56,7 +56,19 @@ body {
 }
 .wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 28px; }
 .num { font-variant-numeric: tabular-nums; }
-header { display: grid; gap: 10px; }
+header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 24px; }
+header > :not(.logo) { grid-column: 1; }
+header > .lede { grid-column: 1 / -1; }
+.logo { grid-column: 2; grid-row: 1 / span 2; align-self: start; line-height: 0; }
+.logo img { height: 88px; width: auto; }
+.logo .oscuro { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo .claro { display: none; }
+  :root:not([data-theme="light"]) .logo .oscuro { display: block; }
+}
+:root[data-theme="dark"] .logo .claro { display: none; }
+:root[data-theme="dark"] .logo .oscuro { display: block; }
+@media (max-width: 760px) { .logo img { height: 64px; } }
 .eyebrow { font-family: var(--display); font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
 h1 { font-family: var(--display); font-stretch: 80%; font-weight: 800; font-size: clamp(30px, 5vw, 46px); line-height: 1.02; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
 .lede { margin: 0; max-width: 68ch; color: var(--ink-2); font-size: 16px; }
@@ -105,6 +117,10 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
 <div class="wrap">
   <header>
     <div class="eyebrow" id="eyebrow">Tipo de cambio real · Argentina</div>
+    <a class="logo" href="https://www.iae.edu.ar/" title="IAE Business School">
+      <img class="claro" src="img/iae-logo.png" alt="IAE Business School, Universidad Austral" width="225" height="245">
+      <img class="oscuro" src="img/iae-logo-oscuro.png" alt="IAE Business School, Universidad Austral" width="198" height="216">
+    </a>
     <h1 id="titulo">Dólar real desde 1970</h1>
     <p class="lede" id="lede">Cargando datos…</p>
   </header>
