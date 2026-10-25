@@ -260,8 +260,47 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
     return [i0, m.length - 1];
   }
 
-  function opciones() {
+  // Etiquetas de eventos: arriba o abajo de la línea según el entorno del mes. Si una etiqueta
+  // tocaría a otra ya ubicada (de cualquier serie), se aleja de la línea de a un renglón.
+  // aPixel da la posición del punto en pantalla: estimada en el primer dibujo, real en el segundo.
+  const anchoTexto = (() => {
+    const c = document.createElement("canvas").getContext("2d");
+    c.font = "11px 'Public Sans', sans-serif";
+    return (t) => c.measureText(t).width;
+  })();
+  function ubicarEventos(S, M, i0, i1, aPixel) {
+    const ubicadas = [], pos = {};
+    const xMin = aPixel(M[i0], 0)[0], xMax = aPixel(M[i1], 0)[0];
+    const evs = D.eventos.map(e => ({ e, i: M.indexOf(e.mes) }))
+      .filter(o => o.i >= i0 && o.i <= i1 && on[o.e.serie]).sort((a, b) => a.i - b.i);
+    for (const { e, i } of evs) {
+      const s = S[e.serie], v = s[i], vec = [s[i - 6], s[i + 6]].filter(z => z != null);
+      const lado = vec.length && v < vec.reduce((a, b) => a + b, 0) / vec.length ? "bottom" : "top";
+      const w = anchoTexto(e.evento) + 10, h = 15;
+      let [px, py] = aPixel(e.mes, v);
+      const dx = Math.max(0, xMin - (px - w / 2)) - Math.max(0, (px + w / 2) - xMax);   // no salirse por los costados
+      px += dx;
+      const caja = (d) => lado === "top"
+        ? { x0: px - w / 2, x1: px + w / 2, y0: py - 4 - d - h, y1: py - 4 - d }
+        : { x0: px - w / 2, x1: px + w / 2, y0: py + 4 + d, y1: py + 4 + d + h };
+      const choques = (b) => ubicadas.filter(o => b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0);
+      let distancia = 6, c;
+      while ((c = choques(caja(distancia))).length && distancia < 200) {   // justo después de la que toca
+        distancia = lado === "top" ? py - 4 - Math.min(...c.map(o => o.y0)) + 2 : Math.max(...c.map(o => o.y1)) - py - 4 + 2;
+      }
+      ubicadas.push(caja(distancia));
+      pos[e.serie + e.mes] = { lado, distancia, dx };
+    }
+    return pos;
+  }
+
+  function opciones(pixelesReales) {
     const S = D.series, M = D.meses, [i0, i1] = rango();
+    const pxMes = document.getElementById("chart").clientWidth * 0.85 / Math.max(1, i1 - i0);
+    const aPixel = pixelesReales
+      ? (mes, v) => chart.convertToPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [mes, v])
+      : (mes) => [(M.indexOf(mes) - i0) * pxMes, 0];
+    const ev = on.eventos ? ubicarEventos(S, M, i0, i1, aPixel) : {};
     const sl = (a) => a.slice(i0, i1 + 1);
     const x = sl(M);
     const ink2 = css("--ink-2"), ink3 = css("--ink-3"), grid = css("--grid"), rule = css("--rule"), surface = css("--surface"), ink = css("--ink");
@@ -288,11 +327,10 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
       const pts = [];
       if (on.eventos && (k === "oficial" || k === "blue")) {
         for (const e of D.eventos) {
-          const i = M.indexOf(e.mes);
-          if (e.serie !== k || i < i0) continue;
-          const v = S[k][i], vec = [S[k][i - 6], S[k][i + 6]].filter(z => z != null);
-          const abajo = vec.length && v < vec.reduce((a, b) => a + b, 0) / vec.length;
-          pts.push({ coord: [e.mes, v], value: e.evento, label: { ...lbl, show: true, position: abajo ? "bottom" : "top", distance: 6, formatter: (p) => p.value } });
+          const p = ev[k + e.mes];
+          if (e.serie !== k || !p) continue;
+          pts.push({ coord: [e.mes, S[k][M.indexOf(e.mes)]], value: e.evento,
+            label: { ...lbl, show: true, position: p.lado, distance: p.distancia, offset: [p.dx, 0], formatter: (q) => q.value } });
         }
       }
       if (k === "oficial" || k === "blue") {
@@ -336,14 +374,18 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
     };
   }
 
-  function dibujar() { chart.setOption(opciones(), { notMerge: true }); }
+  function dibujar() {
+    chart.setOption(opciones(), { notMerge: true });
+    if (on.eventos) chart.setOption(opciones(true));   // con los ejes ya armados, reubica las etiquetas
+  }
 
   function init(data) {
     D = data;
     cabecera();
     chart = echarts.init(document.getElementById("chart"), null, { renderer: "svg" });
     dibujar();
-    addEventListener("resize", () => chart.resize());
+    let espera;
+    addEventListener("resize", () => { chart.resize(); clearTimeout(espera); espera = setTimeout(dibujar, 150); });
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", dibujar);
     new MutationObserver(dibujar).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     document.getElementById("r-eventos").setAttribute("aria-pressed", on.eventos);
