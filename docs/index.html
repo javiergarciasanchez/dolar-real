@@ -216,12 +216,13 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
   </section>
 
   <section class="panel proyectar" aria-labelledby="h-proyectar">
-    <h2 id="h-proyectar">Cómo proyectar el dólar</h2>
-    <p class="note">Una forma de hacerlo: separar el tipo de cambio en un equilibrio, que se mueve con las inflaciones, y un desvío respecto de ese equilibrio, que depende de la coyuntura.</p>
+    <h2 id="h-proyectar">Una manera de proyectar el dólar</h2>
+    <p class="note">Separar el tipo de cambio en un equilibrio, que se mueve con las inflaciones, y un desvío respecto de ese equilibrio, que depende de la coyuntura.</p>
     <div class="pasos">
       <div class="paso">
         <h3><span class="n">1</span>Proyectar el tipo de cambio de equilibrio (TCE)</h3>
-        <p>Partir del TCE de hoy, por ejemplo el promedio histórico real (<span class="num" id="tce-hoy">–</span> en pesos de <span class="mes-base">hoy</span>), o el ajustado por dólar global. Cada mes se le suma la inflación proyectada de Argentina y se le resta la de Estados Unidos.</p>
+        <p>El TCE no es un número exacto: es el valor sostenible en el largo plazo. El promedio histórico real (<span class="num" id="tce-hoy">–</span> en pesos de <span class="mes-base">hoy</span>) o el ajustado por dólar global son formas de estimarlo, pero un cambio estructural, como la aparición de una nueva fuente de exportaciones, puede alterarlo definitivamente.</p>
+        <p>Para proyectarlo, partir del TCE de hoy y cada mes sumarle la inflación proyectada de Argentina y restarle la de Estados Unidos.</p>
         <div class="formula"><div class="eq"><math display="block">
           <msub><mi>TCE</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>=</mo>
           <msub><mi>TCE</mi><mi>T</mi></msub><mo>×</mo>
@@ -234,7 +235,7 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
       </div>
       <div class="paso">
         <h3><span class="n">2</span>Proyectar el desvío respecto del equilibrio</h3>
-        <p>Partir del desvío de hoy (oficial <span class="num" id="desvio-of">–</span>, blue <span class="num" id="desvio-blue">–</span> contra el promedio oficial) y moverlo según las condiciones de corto plazo que pueden mantener al dólar fuera del equilibrio: tasas de interés, reservas, cosecha, flujos de capitales, régimen cambiario, elecciones. En el largo plazo el desvío tiende a cero y el dólar nominal converge al equilibrio.</p>
+        <p>Partir del desvío de hoy respecto del TCE (si se lo estima con el promedio histórico: oficial <span class="num" id="desvio-of">–</span>, blue <span class="num" id="desvio-blue">–</span>) y moverlo según las condiciones de corto plazo que pueden mantener al dólar fuera del equilibrio: tasas de interés, reservas, cosecha, flujos de capitales, régimen cambiario, elecciones. En el largo plazo el desvío tiende a cero y el dólar nominal converge al equilibrio.</p>
         <div class="formula"><div class="eq"><math display="block">
           <msub><mi>d</mi><mi>T</mi></msub><mo>=</mo>
           <mfrac><msub><mi>TC</mi><mi>T</mi></msub><msub><mi>TCE</mi><mi>T</mi></msub></mfrac><mo>−</mo><mn>1</mn>
