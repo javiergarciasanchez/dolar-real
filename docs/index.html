@@ -26,7 +26,7 @@
   --neg: #b23a3a;
   --pos: #19784f;
   --band: rgba(115,122,136,.18);
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s1: #1e8f57; --s2: #2a78d6; --s3: #8455c9; --s4: #eda100;   /* oficial verde, blue azul, multilateral violeta, EE.UU. ámbar */
   --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -35,7 +35,7 @@
     --bg: #14171c; --surface: #1b1f26; --ink: #eef0f3; --ink-2: #b9bfca; --ink-3: #8a919e;
     --rule: #2c323c; --grid: #252a32; --accent: #86b6ef; --chip-on: #eef0f3; --chip-on-ink: #14171c;
     --neg: #e67a7a; --pos: #4fc28e; --band: rgba(185,191,202,.12);
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s1: #2fb574; --s2: #3987e5; --s3: #a07ce6; --s4: #c98500;
     color-scheme: dark;
   }
 }
@@ -43,7 +43,7 @@
   --bg: #14171c; --surface: #1b1f26; --ink: #eef0f3; --ink-2: #b9bfca; --ink-3: #8a919e;
   --rule: #2c323c; --grid: #252a32; --accent: #86b6ef; --chip-on: #eef0f3; --chip-on-ink: #14171c;
   --neg: #e67a7a; --pos: #4fc28e; --band: rgba(185,191,202,.12);
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --s1: #2fb574; --s2: #3987e5; --s3: #a07ce6; --s4: #c98500;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -111,6 +111,13 @@ thead th { font-weight: 600; color: var(--ink-3); font-size: 12px; text-transfor
 .simbolos dt { color: var(--ink); white-space: nowrap; }
 .simbolos dt math { font-size: 15px; }
 .simbolos dd { margin: 0; }
+.pasos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.paso { display: grid; gap: 8px; align-content: start; color: var(--ink-2); font-size: 14px; }
+.paso p { margin: 0; }
+.paso h3 { margin: 0; font-family: var(--display); font-stretch: 85%; font-weight: 700; font-size: 16px; color: var(--ink); display: flex; gap: 8px; align-items: baseline; }
+.paso .n { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--chip-on); color: var(--chip-on-ink); font-size: 13px; display: inline-grid; place-items: center; transform: translateY(-1px); }
+.paso .formula { background: var(--bg); }
+.paso .formula math { font-size: 17px; }
 a { color: var(--accent); }
 footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
 @media (max-width: 760px) {
@@ -119,6 +126,7 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
   .stat:nth-child(n+3) { border-top: 1px solid var(--rule); }
   .two { grid-template-columns: minmax(0, 1fr); }
 }
+@media (max-width: 960px) { .pasos { grid-template-columns: minmax(0, 1fr); } }
 </style>
 </head>
 <body>
@@ -207,6 +215,49 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
     </div>
   </section>
 
+  <section class="panel proyectar" aria-labelledby="h-proyectar">
+    <h2 id="h-proyectar">Cómo proyectar el dólar</h2>
+    <p class="note">Una forma de hacerlo: separar el tipo de cambio en un equilibrio, que se mueve con las inflaciones, y un desvío respecto de ese equilibrio, que depende de la coyuntura.</p>
+    <div class="pasos">
+      <div class="paso">
+        <h3><span class="n">1</span>Proyectar el tipo de cambio de equilibrio (TCE)</h3>
+        <p>Partir del TCE de hoy, por ejemplo el promedio histórico real (<span class="num" id="tce-hoy">–</span> en pesos de <span class="mes-base">hoy</span>), o el ajustado por dólar global. Cada mes se le suma la inflación proyectada de Argentina y se le resta la de Estados Unidos.</p>
+        <div class="formula"><div class="eq"><math display="block">
+          <msub><mi>TCE</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>=</mo>
+          <msub><mi>TCE</mi><mi>T</mi></msub><mo>×</mo>
+          <munderover><mo>∏</mo><mrow><mi>k</mi><mo>=</mo><mi>T</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow></munderover>
+          <mfrac>
+            <mrow><mn>1</mn><mo>+</mo><msubsup><mi>π</mi><mi>k</mi><mtext>ARG</mtext></msubsup></mrow>
+            <mrow><mn>1</mn><mo>+</mo><msubsup><mi>π</mi><mi>k</mi><mtext>USA</mtext></msubsup></mrow>
+          </mfrac>
+        </math></div></div>
+      </div>
+      <div class="paso">
+        <h3><span class="n">2</span>Proyectar el desvío respecto del equilibrio</h3>
+        <p>Partir del desvío de hoy (oficial <span class="num" id="desvio-of">–</span>, blue <span class="num" id="desvio-blue">–</span> contra el promedio oficial) y moverlo según las condiciones de corto plazo que pueden mantener al dólar fuera del equilibrio: tasas de interés, reservas, cosecha, flujos de capitales, régimen cambiario, elecciones. En el largo plazo el desvío tiende a cero y el dólar nominal converge al equilibrio.</p>
+        <div class="formula"><div class="eq"><math display="block">
+          <msub><mi>d</mi><mi>T</mi></msub><mo>=</mo>
+          <mfrac><msub><mi>TC</mi><mi>T</mi></msub><msub><mi>TCE</mi><mi>T</mi></msub></mfrac><mo>−</mo><mn>1</mn>
+          <mspace width="1.2em"></mspace>
+          <msub><mi>d</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>→</mo><mn>0</mn>
+        </math></div></div>
+      </div>
+      <div class="paso">
+        <h3><span class="n">3</span>Obtener el dólar nominal proyectado</h3>
+        <p>El tipo de cambio nominal es el equilibrio proyectado corregido por el desvío proyectado. Puede haber dos desvíos, uno del oficial y otro del blue, que dan dos tipos de cambio nominales distintos con el mismo equilibrio. La brecha proyectada surge de la diferencia entre ambos desvíos.</p>
+        <div class="formula"><div class="eq"><math display="block">
+          <msubsup><mi>TC</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow><mtext>of</mtext></msubsup><mo>=</mo>
+          <msub><mi>TCE</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>×</mo>
+          <mo>(</mo><mn>1</mn><mo>+</mo><msubsup><mi>d</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow><mtext>of</mtext></msubsup><mo>)</mo>
+        </math></div><div class="eq"><math display="block">
+          <msubsup><mi>TC</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow><mtext>blue</mtext></msubsup><mo>=</mo>
+          <msub><mi>TCE</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>×</mo>
+          <mo>(</mo><mn>1</mn><mo>+</mo><msubsup><mi>d</mi><mrow><mi>T</mi><mo>+</mo><mi>h</mi></mrow><mtext>blue</mtext></msubsup><mo>)</mo>
+        </math></div></div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <span id="actualizado"></span>
     <span><a href="dolar_real.csv">Descargar serie (CSV)</a> · IAE Business School</span>
@@ -243,6 +294,10 @@ footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 13px; 
     document.getElementById("stats").innerHTML = tiles.map(([k, v, d]) =>
       `<div class="stat"><span class="k">${k}</span><span class="v num">${v}</span><span class="d">${d}</span></div>`).join("");
     document.getElementById("mes-base-formula").textContent = fmtMesLargo(base);
+    document.querySelectorAll(".mes-base").forEach(el => el.textContent = fmtMesLargo(base));
+    document.getElementById("tce-hoy").textContent = ars(po);
+    document.getElementById("desvio-of").textContent = pct(r.desvios.Oficial["Promedio oficial"]);
+    document.getElementById("desvio-blue").textContent = pct(r.desvios.Blue["Promedio oficial"]);
     document.getElementById("actualizado").textContent ="Datos hasta " + fmtMesLargo(base) + " · actualizado el " + new Date(D.generado).toLocaleDateString("es-AR");
     document.getElementById("nota-grafico").textContent = "Pesos de " + fmtMesLargo(base) + " por dólar. El blue se muestra sólo en los períodos con cepo (2011–2015 y desde 2019). Las bandas son el promedio mensual del régimen vigente.";
 

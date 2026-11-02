@@ -44,5 +44,5 @@ Probado contra las fuentes reales en la PC de Javier (24-oct-2026, Claude Code):
 pytest                                       # tests
 python -m dolar_real.actualizar              # descarga + cálculo + docs/
 python -m dolar_real.actualizar --offline    # sólo cálculo + docs/
-python -m http.server -d docs 8000           # ver la página en http://localhost:8000
+python -m http.server -d docs 8765           # ver la página en http://localhost:8765 (el 8000 está reservado por Windows)
 ```
