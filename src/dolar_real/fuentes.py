@@ -164,6 +164,18 @@ def inflacion_indec() -> pd.DataFrame:
     return pd.DataFrame({"mes": infl.index, "inflacion": infl.values, "fuente": fuente})
 
 
+BASE_IPC = pd.Timestamp("2016-12-01")   # base del IPC Nacional del INDEC
+
+
+def agregar_ipc(d: pd.DataFrame) -> pd.DataFrame:
+    """Agrega la columna ipc: la inflación empalmada encadenada, dic-2016 = 100.
+    Desde 2017 coincide con el IPC Nacional del INDEC; antes es un índice construido."""
+    d = d.sort_values("mes").reset_index(drop=True)
+    nivel = (1 + d["inflacion"]).cumprod()
+    d["ipc"] = nivel / nivel[pd.to_datetime(d["mes"]) == BASE_IPC].iloc[0] * 100
+    return d
+
+
 # ---------------------------------------------------------------- CPI Estados Unidos
 FRED_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={}"
 SERIE_CPI = "CPIAUCNS"   # = BLS CUUR0000SA0, sin desestacionalizar, como el IPC argentino

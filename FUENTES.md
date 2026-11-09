@@ -9,7 +9,7 @@ Cada serie usada en el cálculo vive en un CSV de `data/raw/`. Esta tabla docume
 | `blue_diario_ambito_hasta_2022.csv` | Dólar informal diario, compra y venta | [Ámbito, histórico dólar informal](https://www.ambito.com/contenidos/dolar-informal-historico.html) | Congelado |
 | `blue_diario_desde_2023.csv` | Dólar informal diario desde 2023 | Ámbito (`mercados.ambito.com/dolar/informal/historico-general/...`). Respaldo: [ArgentinaDatos](https://api.argentinadatos.com/v1/cotizaciones/dolares/blue) | Mensual (lo crea la primera corrida) |
 | `blue_mensual.csv` | Blue, promedio mensual de la venta. Sólo 2011–2015 y desde ago-2019 | Derivado de los dos anteriores | Mensual desde ene-2023 |
-| `inflacion_argentina_mensual.csv` | Variación mensual del IPC empalmado; columna `fuente` indica el índice de cada tramo | Ver detalle abajo | Mensual desde ene-2017 |
+| `inflacion_argentina_mensual.csv` | Variación mensual del IPC empalmado (`inflacion`), índice encadenado (`ipc`, dic-2016 = 100); columna `fuente` indica el índice de cada tramo | Ver detalle abajo | Mensual desde ene-2017 |
 | `cpi_usa_mensual.csv` | CPI-U, all items, sin desestacionalizar (BLS `CUUR0000SA0`) | [FRED CPIAUCNS](https://fred.stlouisfed.org/series/CPIAUCNS) (misma serie que BLS) | Mensual, serie completa |
 | `itcrm_bcra_normalizado.csv` | ITCRM y bilateral con EE.UU., promedio mensual, normalizados al último mes = 1 | BCRA, [ITCRMSerie.xlsx](https://www.bcra.gob.ar/Pdfs/PublicacionesEstadisticas/ITCRMSerie.xlsx), hoja "ITCRM y bilaterales prom. mens." | Mensual, serie completa |
 | `twdi_fred_mensual.csv` | Índice real amplio del dólar (Reserva Federal) | Hasta dic-2005: [TWEXBPA](https://fred.stlouisfed.org/series/TWEXBPA) (bienes, discontinuada) reescalada al nivel de RTWEXBGS en ene-2006. Desde ene-2006: [RTWEXBGS](https://fred.stlouisfed.org/series/RTWEXBGS) | Congelado hasta 2005, mensual desde 2006 |
@@ -30,6 +30,8 @@ Se usa la misma serie que el BCRA para el tipo de cambio real multilateral ([met
 | ene-2017 | hoy | IPC Nacional (INDEC, base dic-2016) | [INDEC sh_ipc_divisiones.xls](https://www.indec.gob.ar/ftp/cuadros/economia/sh_ipc_divisiones.xls), hoja "Índices IPC Cobertura Nacional". Respaldo: datos.gob.ar `145.3_INGNACNAL_DICI_M_15` |
 
 Sólo el último tramo se descarga cada mes; los anteriores están congelados.
+
+La columna `ipc` encadena las variaciones de todos los tramos con base dic-2016 = 100 y se recalcula en cada actualización. Desde ene-2017 coincide con el IPC Nacional que publica el INDEC; antes es un índice construido con el empalme, no un dato oficial (los niveles de cada tramo original tienen bases distintas y no se pueden juntar directamente). El cálculo del tipo de cambio real usa sólo `inflacion`.
 
 ## Tipo de cambio 1970–2019: criterios y correcciones
 

@@ -80,16 +80,18 @@ def _empalmar(viejo: pd.DataFrame, nuevo: pd.DataFrame, desde) -> pd.DataFrame:
     f = viejo.columns[0]
     v = viejo[pd.to_datetime(viejo[f]) < desde]
     n = nuevo[pd.to_datetime(nuevo[f]) >= desde]
-    return pd.concat([v, n[viejo.columns]], ignore_index=True)
+    return pd.concat([v, n.reindex(columns=viejo.columns)], ignore_index=True)
 
 
-def _paso(estado, nombre, archivo, col, obtener, *, desde=None, **val):
+def _paso(estado, nombre, archivo, col, obtener, *, desde=None, completar=None, **val):
     print(f"· {nombre}")
     viejo = _leer(archivo)
     try:
         nuevo = obtener()
         if desde is not None:
             nuevo = _empalmar(viejo, nuevo, desde)
+        if completar is not None:   # columnas que se recalculan sobre la serie completa
+            nuevo = completar(nuevo)
         avisos = _validar(viejo, nuevo, col, desde=desde, **val)
         _guardar(nuevo, archivo)
         ult = pd.to_datetime(nuevo.iloc[:, 0]).max()
@@ -116,8 +118,8 @@ def descargar() -> dict:
           desde=F.DESDE_BLUE_ACTUAL, rango=(1, 1e6), salto_max=0.6, mensual=False)
 
     _paso(est, "Inflación Argentina (INDEC)", "inflacion_argentina_mensual.csv", "inflacion",
-          F.inflacion_indec, desde=F.DESDE_IPC_NACIONAL, rango=(-0.05, 0.5), salto_max=0.1,
-          revision_max=0.002)
+          F.inflacion_indec, desde=F.DESDE_IPC_NACIONAL, completar=F.agregar_ipc,
+          rango=(-0.05, 0.5), salto_max=0.1, revision_max=0.002)
     _paso(est, "CPI Estados Unidos (FRED)", "cpi_usa_mensual.csv", "cpi", F.cpi_usa,
           rango=(1, 2000), salto_max=0.03, revision_max=0.01)
     _paso(est, "ITCRM (BCRA)", "itcrm_bcra_normalizado.csv", "itcrm_norm", F.itcrm,
