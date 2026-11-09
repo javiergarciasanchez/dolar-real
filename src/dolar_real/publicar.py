@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
-from .calculo import ROOT, Insumos, calcular, resumen
+from .calculo import ROOT, Insumos, _leer, calcular, resumen
 
 DOCS = ROOT / "docs"
 EVENTOS = ROOT / "config" / "eventos.csv"
@@ -63,6 +63,12 @@ def publicar() -> dict:
                                     encoding="utf-8")
 
     out = df.copy()
+    # Niveles de precios, para quien prefiera trabajar con índices (el cálculo usa las inflaciones).
+    # El CPI de meses no publicados (oct-2025) se interpola, como en inflacion_usa.
+    out["ipc_arg"] = _leer("inflacion_argentina_mensual.csv")["ipc"].reindex(out.index)
+    cpi = ins.cpi_usa.sort_index()
+    out["cpi_usa"] = cpi.reindex(pd.date_range(cpi.index.min(), cpi.index.max(), freq="MS")) \
+        .interpolate().reindex(out.index)
     out.index = out.index.strftime("%Y-%m-%d")
     out.to_csv(DOCS / "dolar_real.csv", float_format="%.10g", lineterminator="\n")
     return res

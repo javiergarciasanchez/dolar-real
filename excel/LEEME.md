@@ -39,6 +39,7 @@ Después del día 16 (cuando corre la actualización en GitHub): **Datos > Actua
 | `tc_oficial_nominal`, `tc_blue_nominal` | TC nominal promedio del mes (el blue repite el oficial donde no hubo cepo) |
 | `banda_inferior_nominal`, `banda_superior_nominal` | Bandas cambiarias nominales |
 | `inflacion_arg`, `inflacion_usa` | Inflación mensual |
+| `ipc_arg`, `cpi_usa` | Niveles de precios: IPC de Argentina encadenado (dic-2016 = 100, igual al INDEC desde 2017) y CPI-U de EE.UU. (oct-2025 interpolado). Sus variaciones son las inflaciones de las columnas anteriores |
 | `factor_inflaciones` | Π de (1+π_ARG)/(1+π_USA) de los meses posteriores hasta el mes base |
 | `oficial`, `blue`, `banda_inferior`, `banda_superior` | Valores reales, en pesos del mes base |
 | `multilateral`, `bilateral_usa` | ITCRM y bilateral EE.UU. del BCRA, escalados al TC oficial del mes base |
